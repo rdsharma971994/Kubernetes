@@ -1,13 +1,18 @@
 rm -rf app
 mkdir app
 cd app
-cp /etc/jenkins/workspace/Build_jenkins/target/addressbook.war .
+cp /var/workspace/Build_JoB/project/target/project-1.0-RAMA.war .
+cp /var/workspace/tomcat-users.xml .
+cp /var/workspace/context.xml .
 cat << 'EOF' > Dockerfile
 FROM tomcat
-ADD addressbook.war /usr/local/tomcat/webapps
+ADD project-1.0-RAMA.war /usr/local/tomcat/webapps
+ADD tomcat-users.xml /usr/local/tomcat/conf
+ADD context.xml /usr/local/tomcat/webapps/manager/META-INF
 CMD "catalina.sh" "run"
 EOF
 
 sudo docker build . -t rdsharma971994/tcsapp:$BUILD_NUMBER
 sudo docker push rdsharma971994/tcsapp:$BUILD_NUMBER
-sudo docker run -itd --name myjenkinswebApp$BUILD_NUMBER -p 80:8080 rdsharma971994/tcsapp:$BUILD_NUMBER
+sudo docker run -itd --name myjenkinswebApp$BUILD_NUMBER -p 8080:8080 rdsharma971994/tcsapp:$BUILD_NUMBER
+
